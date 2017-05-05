@@ -1,0 +1,30 @@
+<extend name="Layout/base" />
+<block name="title">查看报告 - {:C('SYS_NAME')}</block>
+<block name="page_title">查看报告</block>
+<block name="page_title_en">report</block>
+<block name="main">
+		<div class="am-g">
+			<div class="am-u-sm-12">
+				<p>考试信息：{$data.title} &nbsp;&nbsp;&nbsp;开始日期：{$data.start} &nbsp;&nbsp;&nbsp;截止日期：{$data.end} </p>
+				<foreach name="reports" item="vo" key="k">
+				<table class="am-table text-overflow am-table-striped am-table-hover table-main am-table-centered">
+					<h2>{$k}成绩单</h2>
+					<p>平均分：{$count[$k]['zongfen']/$count[$k]['people']}分 &nbsp;&nbsp;&nbsp;客观题平均分：{$count[$k]['keguan']/$count[$k]['people']}分 &nbsp;&nbsp;&nbsp;主观题平均分：{$count[$k]['zongfen']/$count[$k]['people']-$count[$k]['keguan']/$count[$k]['people']}分 &nbsp;&nbsp;&nbsp;选择题正确率：{$count[$k]['choice']['right']/$count[$k]['choice']['total']*100|ceil}% &nbsp;&nbsp;&nbsp;判断题正确率：{$count[$k]['judge']['right']/$count[$k]['judge']['total']*100|ceil}%</p>
+					<thead>
+						<tr><th style="width: 50px">序号</th><th>姓名</th><th>班级</th><th>学号</th><th>总分</th><th>客观题</th><th>主观题</th><th>题型正确率(选择/判断)</th></tr>
+					</thead>
+					<tbody>
+					<if condition="$vo">
+					<volist name="vo" id="item">
+					<tr><td>{$key+1}</td><td>{$item.name}</td><td>{$item.class}</td><td>{$item.sno}</td><td>{$item.score}</td><td>{$item['score']-$item['zscore']}</td><td>{$item.zscore}</td><td>{$item['count']['choice']['right']/$item['count']['choice']['total']*100|ceil}%/{$item['count']['judge']['right']/$item['count']['judge']['total']*100|ceil}%</td></tr>
+					</volist>
+					<else/>
+					<tr><td colspan=5><span class='am-icon-warning'></span> 暂无数据</td></tr>
+					</if>
+					</tbody>
+				</table>
+				</foreach>
+				<br><br><br><br>
+			</div>
+		</div>
+	</block>

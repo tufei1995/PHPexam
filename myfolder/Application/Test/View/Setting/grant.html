@@ -1,0 +1,53 @@
+<extend name="Layout/base" />
+<block name="title">权限管理 - {:C('SYS_NAME')}</block>
+<block name="page_title">权限管理</block>
+<block name="page_title_en">access</block>
+<block name="main">
+		<style type="text/css">
+			label{font-weight: 400;}
+		</style>
+		<div class="am-g am-margin-left am-margin-right">
+			<p>授权类型 ：<if condition="$_GET['u']">用户 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UID：{$Think.get.u}<else/>用户组 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GID：{$Think.get.g}</if> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名称：{$data.name}</p>
+			<form action="" method="POST" class="am-f">
+<if condition="$_GET['u']">
+			<input type="hidden" name="table" value="user">
+			<input type="hidden" name="uid" value="{$Think.get.u}">
+<else/>
+			<input type="hidden" name="table" value="group">
+			<input type="hidden" name="gid" value="{$Think.get.g}">
+</if>
+
+			<ul class="am-list am-list-static am-list-border am-list-striped">
+			<volist name="access" id="item">
+				<li><label onclick="unselAll({$item.aid});"><input type="checkbox" name="access[]" id="p{$item.aid}" value="{$item.aid}">[模块]{$item.title}</label></li>
+				<if condition="$item['child']">
+				<li>
+				<volist name="item.child" id="child">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label><input type="checkbox" name="access[]" id="{$child.pid}" value="{$child.aid}">{$child.title}</label>
+				</volist>
+				</li>
+				</if>
+			</volist>
+			</ul>
+			<div class="am-u-md-12 am-u-lg-12 am-text-center">
+			<input type="submit" class="am-btn am-btn-primary" value="提交">
+			</div>
+			</form>
+		</div>
+	</block>
+	<block name="script">
+	<script>
+		var access={$data.access};
+		$.each(access, function(n, value){
+			$("input:checkbox[name='access[]'][value='"+value+"']").prop("checked",true);
+		});
+		$("input").change(function(){
+			$("input:checkbox[name='access[]'][value='"+$(this).attr('id')+"']").prop("checked",true);
+		});
+		function unselAll(id){
+			if (!$("input:checkbox[name='access[]'][value='"+id+"']").is(':checked')){
+				$("input:checkbox[name='access[]'][id='"+id+"']").prop("checked",false);
+			}
+		}
+	</script>
+	</block>

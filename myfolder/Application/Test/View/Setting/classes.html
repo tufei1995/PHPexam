@@ -1,0 +1,119 @@
+<extend name="Layout/base" />
+<block name="title">班级管理 - {:C('SYS_NAME')}</block>
+<block name="page_title">班级管理</block>
+<block name="page_title_en">class</block>
+<block name="main">
+		<div class="am-g">
+			<div class="am-u-sm-12 am-u-md-9 am-margin-top">
+				<div class="am-btn-toolbar">
+					<div class="am-btn-group am-btn-group-xs">
+						<button type="button" class="am-btn am-btn-primary" data-am-modal="{target: '#add-modal', closeViaDimmer: 1}"><span class="am-icon-plus"></span> 新增</button>
+						<button type="button" class="am-btn am-btn-default delete"><span class="am-icon-trash-o"></span> 删除</button>
+					</div>
+				</div>
+			</div>
+			<div class="am-u-sm-12 am-u-md-3 am-margin-top">
+				<div class="am-input-group am-input-group-sm">
+					<input type="text" name="keyword" class="am-form-field" value="{$Think.session.ckeyword}" placeholder="请输入查询关键字">
+					<span class="am-input-group-btn">
+						<button class="am-btn am-btn-default search" type="submit">搜索</button>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="am-g">
+			<div class="am-u-sm-12">
+				<table class="am-table text-overflow am-table-striped am-table-hover table-main am-table-centered">
+					<thead>
+						<tr><th><input type="checkbox" name="selectall" onclick="selAll();"></th><th class="am-hide-sm-only">ID</th><th style="width:300px;">结构</th><th class="am-hide-sm-only">创建者</th><th>名称</th><th>操作</th></tr>
+					</thead>
+					<tbody id="body">
+					</tbody>
+				</table>
+				<br><br><br><br>
+			</div>
+		</div>
+
+		<div class="am-modal am-modal-no-btn" tabindex="-1" id="edit-modal">
+			<div class="am-modal-dialog">
+				<div class="am-modal-hd">修改班级或学院属性
+					<a href="javascript: void(0)" class="am-close" data-am-modal-close>&times;</a>
+				</div>
+				<div class="am-modal-bd am-g am-text-left">
+					<form method="post" action="../common/edit" class="am-form">
+						<div class="am-form-group am-margin-top">
+							<input type="hidden" name="table" value="class">
+							<input type="hidden" name="id" class="id" value="class">
+							<input type="text" name="title" class="title" required class="am-form-field" placeholder="班级或学院名称">
+						</div>
+						<div class="am-form-group am-margin-top">
+							<select class="am-form-field pid" required name="pid">
+								<option value="">--请选择所属学院--</option>
+								<option value="0">作为学院</option>
+								<volist name="college" id="item">
+									<option value="{$item.id}">{$item.title}</option>
+								</volist>
+							</select>
+						</div>
+						<input type="submit" name="submit" class="am-btn am-btn-primary am-btn-block am-radius" value="确认修改">
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="am-modal am-modal-no-btn" tabindex="-1" id="add-modal">
+			<div class="am-modal-dialog">
+				<div class="am-modal-hd">新增班级或学院
+					<a href="javascript: void(0)" class="am-close" data-am-modal-close>&times;</a>
+				</div>
+				<div class="am-modal-bd am-g am-text-left">
+					<form method="post" action="../common/add" class="am-form">
+						<div class="am-form-group am-margin-top">
+							<input type="hidden" name="table" value="class">
+							<input type="text" name="title" required class="am-form-field" placeholder="班级或学院名称">
+						</div>
+						<div class="am-form-group am-margin-top">
+							<select class="am-form-field" required name="pid">
+								<option value="">--请选择所属学院--</option>
+								<option value="0">作为学院</option>
+								<volist name="college" id="item">
+									<option value="{$item.id}">{$item.title}</option>
+								</volist>
+							</select>
+						</div>
+						<input type="submit" name="submit" class="am-btn am-btn-primary am-btn-block am-radius" value="提 交">
+					</form>
+				</div>
+			</div>
+		</div>
+	</block>
+	<block name="script">
+	<script>
+		college();
+		$('.search').click(function(){
+			college(1, $('input[name=keyword]').val());
+		});
+		function showEdit(id){
+			collegeInfo(id);
+		}
+		$(":radio").click(function(){
+			if($(this).val() == 4){
+				$(".link").show();
+			} else {
+				$(".link").hide();
+			}
+		});
+		$('.delete').click(function(){
+			var ids = []; 
+			$('input[name="ids"]:checked').each(function(){ 
+				ids.push($(this).val()); 
+			});
+			if(ids.length == 0) {
+				showFail('请选择要删除的内容！');
+			} else {
+				deletekey('class', ids);
+			}
+		});
+	</script>
+	</block>

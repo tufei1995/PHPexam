@@ -1,0 +1,48 @@
+<extend name="Layout/base" />
+<block name="title">阅卷 - {:C('SYS_NAME')}</block>
+<block name="page_title">阅卷</block>
+<block name="page_title_en">Mark</block>
+<block name="main">
+			<style>
+				a{color:black;}
+				.relax{ -webkit-filter: blur(3px);}
+				.am-btn-danger,.am-btn-success{width:43px;height:33px;padding:6px 12px 6px 12px;}
+			</style>
+			<div class="am-g am-padding-left am-padding-right">
+					<form method="POST">
+					<input type="hidden" name="tid" value="{$Think.get.id}">
+					<ul class="am-list am-list-static am-list-border">
+						<if condition="$data['filling']">
+						<p><b>填空题</b></p>
+						<volist name="data.filling" id="item">
+						<li>
+							{++$count}、{$item.ques}
+
+							<ul class="am-list am-list-static">
+								<li><p>答：{$item.answer}</p></li>
+								<li><input type="number" class="am-form-field" name="{$item.uid}[{$item.type}][{$item.qid}]" placeholder="请打分" required></li>
+							</ul>
+						</li>
+						</volist>
+						</if>
+						<if condition="$data['filling']">
+						<p><b>主观题</b></p>
+						<volist name="data.subjective" id="item">
+						<li>
+							{++$count}、{$item.ques}
+
+							<ul class="am-list am-list-static">
+								<li><p>答：{$item.answer}</p></li>
+								<li><input type="number" class="am-form-field" name="{$item.uid}[{$item.type}][{$item.qid}]" placeholder="请打分" required></li>
+							</ul>
+						</li>
+						</volist>
+						</if>
+					</ul>
+					<div class="am-u-md-12 am-u-lg-12 am-text-center">
+						<input type="submit" class="am-btn am-btn-primary" value="提交">
+					</div>
+					</form>
+				</div>
+			</div>
+	</block>

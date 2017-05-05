@@ -1,0 +1,58 @@
+<extend name="Layout/base" />
+<block name="title">考生列表 - {:C('SYS_NAME')}</block>
+<block name="page_title">考生列表</block>
+<block name="page_title_en">users</block>
+<block name="main">
+		<div class="am-g">
+			<div class="am-u-sm-12 am-u-md-9 am-margin-top">
+				<div class="am-btn-toolbar">
+					<div class="am-btn-group am-btn-group-xs">
+						<a href="./add_student?id={$Think.get.id}" class="am-btn am-btn-primary"><span class="am-icon-plus"></span> 新增</a>
+						<button type="button" class="am-btn am-btn-default delete"><span class="am-icon-trash-o"></span> 删除</button>
+					</div>
+				</div>
+			</div>
+			<div class="am-u-sm-12 am-u-md-3 am-margin-top">
+				<div class="am-input-group am-input-group-sm">
+					<input type="text" name="keyword" class="am-form-field" value="{$Think.session.ckeyword}" placeholder="请输入查询关键字">
+					<span class="am-input-group-btn">
+						<button class="am-btn am-btn-default search" type="submit">搜索</button>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="am-g">
+			<div class="am-u-sm-12">
+				<table class="am-table text-overflow am-table-striped am-table-hover table-main am-table-centered">
+					<thead>
+						<tr><th style="width: 30px"><input type="checkbox" name="selectall" onclick="selAll();"></th><th class="am-hide-sm-only">ID</th><th>用户名</th><th>学号/工号</th><th>班级</th><th style="width: 150px">操作</th></tr>
+					</thead>
+					<tbody id="body">
+					</tbody>
+				</table>
+				<ul class="am-pagination am-pagination-centered">
+				</ul>
+				<br><br><br><br>
+			</div>
+		</div>
+		</block>
+		<block name="script">
+		<script>
+			studentlist();
+			$('.search').click(function(){
+				studentlist(1, $('input[name=keyword]').val());
+			});
+			$('.delete').click(function(){
+				var ids = []; 
+				$('input[name="ids"]:checked').each(function(){ 
+					ids.push($(this).val()+'-'+getUrlParam('id')); 
+				});
+				if(ids.length == 0) {
+					showFail('请选择要删除的用户！');
+				} else {
+					deletekey('report', ids);
+				}
+			});
+		</script>
+		</block>

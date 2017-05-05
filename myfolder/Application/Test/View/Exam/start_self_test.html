@@ -1,0 +1,135 @@
+<extend name="Layout/base" />
+<block name="title">自我测试 - {:C('SYS_NAME')}</block>
+<block name="page_title">自我测试</block>
+<block name="page_title_en">self test</block>
+<block name="main">
+			<style>
+				a{color:black;}
+				.relax{ -webkit-filter: blur(3px);}
+				.am-btn-danger,.am-btn-success{width:43px;height:33px;padding:6px 12px 6px 12px;}
+			</style>
+			<div class="am-g">
+				<ol class="am-breadcrumb am-padding-left">
+					<li><a href="../index/index">首页</a></li>
+					<li><a href="./selftest">自我测试</a></li>
+					<li><a href="./selftest?id={$data.courseid}">{:getCourseNameById($data['courseid'])}</a></li>
+					<li class="am-active">{:getChapterAndSectionNameById($data['id'])}</li>
+				</ol>
+				<div class="am-u-md-3 am-u-lg-3">
+					<div class="daohang am-text-center" data-am-sticky="{top:100}">
+						<p class="am-text-center">测试用时</p>
+						<p class="am-text-center am-text-danger" id="timer" style="font-size: 24px;">00:00</p>
+						<span class="am-btn am-btn-block am-btn-primary am-round ineedrelax">休息一下</span>
+						<span class="am-btn am-btn-block am-btn-primary am-round relaxing" style="display: none;">继续测试</span>
+						<span class="am-btn am-btn-block am-btn-primary am-round am-margin-top submit">我要交卷</span>
+						<div class="am-btn-group am-margin-top">
+							<for start="1" end="$total +1" name="i"><a href="#ques{$i-1}"><button id="status{$i}" class="am-btn am-btn-danger">{$i}</button></a>
+							</for>
+						</div>
+						<p>*红色表示未作答，绿色表示已作答，点击题号可跳转至相应题目。</p>
+					</div>
+				</div>
+				<div class="am-u-md-9 am-u-lg-9 question" id="question">
+					<p id="0">一、不定项选择题</p>
+					<form method="post" action="">
+					<input type="hidden" name="time" value="0">
+					<input type="hidden" name="pid" value="{$Think.get.id}">
+					<input type="hidden" name="start_time" value="{:date('Y-m-d H:i:s')}">
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="choice" id="item" empty="暂时没有需要回答的选择题！">
+						<php>$last = $key;</php>
+						<if condition="$item.type eq 'single'">
+
+						<li id="ques{++$key}">
+							{$key}、{$item.title}
+
+							<ul class="am-list am-list-static">
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="A" id="{$key}" data-am-ucheck> A、{$item.ansa}</label></li>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="B" id="{$key}" data-am-ucheck> B、{$item.ansb}</label></li>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="C" id="{$key}" data-am-ucheck> C、{$item.ansc}</label></li>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="D" id="{$key}" data-am-ucheck> D、{$item.ansd}</label></li>
+							</ul>
+						</li>
+						<else/>
+<li id="ques{++$key}">
+							[多选]{$key}、{$item.title}
+							
+							<ul class="am-list am-list-static">
+								<li><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="c{$item.cid}[]" value="A" id="{$key}" data-am-ucheck> A、{$item.ansa}</label></li>
+								<li><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="c{$item.cid}[]" value="B" id="{$key}" data-am-ucheck> B、{$item.ansb}</label></li>
+								<li><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="c{$item.cid}[]" value="C" id="{$key}" data-am-ucheck> C、{$item.ansc}</label></li>
+								<li><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="c{$item.cid}[]" value="D" id="{$key}" data-am-ucheck> D、{$item.ansd}</label></li>
+							</ul>
+						</li>
+						</if>
+						</volist>
+					</ul>
+					<p>二、判断题</p>
+
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="judge" id="item" key="last" empty="暂时没有需要回答的判断题！">
+						<li id="ques{++$count}">
+							{$count}、{$item.title}
+
+							<ul class="am-list am-list-static">
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="j{$item.jid}" value="正确" id="{$count}" data-am-ucheck> 正确</label></li>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="j{$item.jid}" value="错误" id="{$count}" data-am-ucheck> 错误</label></li>
+							</ul>
+						</li>
+						</volist>
+					</ul>
+					</form>
+				</div>
+			</div>
+	</block>
+	<block name="script">
+	<script>
+		$('.submit').click(function(){
+			if (confirm('已作答的题目答案提交后不可修改，你确认要提交吗？')){
+				$('form').submit();
+			}
+		});
+		document.oncontextmenu = new Function('event.returnValue=false;');
+		document.onselectstart = new Function('event.returnValue=false;');
+		var maxtime = 1;
+		var flag = 1;
+		function Count(){
+			if(maxtime>=0 && flag){
+				minutes = Math.floor(maxtime/60);
+				seconds = Math.floor(maxtime%60);
+				msg = foo(minutes)+":"+foo(seconds);
+				document.getElementById('timer').innerHTML=msg;
+				$('input[name=time]').val(maxtime);
+				++maxtime;
+			}
+		}
+		function foo(str){
+			str ='0'+str;
+			return str.substring(str.length-2,str.length);
+		}
+		timer = setInterval("Count(1)",1000);
+		$('.relaxing').click(function(){
+			$('#question').removeClass('relax');
+			$('.ineedrelax').show();
+			$(this).hide();
+			$('input').attr('disabled', false);
+			timer = setInterval("Count(1)",1000);
+		});
+		$('.ineedrelax').click(function(){
+			$('#question').addClass('relax');
+			$('.relaxing').show();
+			$(this).hide();
+			$('input').attr('disabled', true);
+			clearInterval(timer);
+		});
+		$('input').change(function(){
+			if ($(this).prop("checked")) {
+				$('#status'+$(this).attr("id")).removeClass('am-btn-danger');
+				$('#status'+$(this).attr("id")).addClass('am-btn-success');
+			} else {
+				$('#status'+$(this).attr("id")).removeClass('am-btn-success');
+				$('#status'+$(this).attr("id")).addClass('am-btn-danger');				
+			}
+		});
+	</script>
+	</block>

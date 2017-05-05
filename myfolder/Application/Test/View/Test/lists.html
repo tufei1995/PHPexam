@@ -1,0 +1,192 @@
+<extend name="Layout/base" />
+<block name="title">考试管理 - {:C('SYS_NAME')}</block>
+<block name="page_title">考试管理</block>
+<block name="page_title_en">tests</block>
+<block name="main">
+		<div class="am-g">
+			<div class="am-u-sm-12 am-u-md-9 am-margin-top">
+				<div class="am-btn-toolbar">
+					<div class="am-btn-group am-btn-group-xs">
+						<button type="button" class="am-btn am-btn-primary" data-am-modal="{target: '#add-modal', closeViaDimmer: 1, width:800,height:600}"><span class="am-icon-plus"></span> 新增</button>
+						<button type="button" class="am-btn am-btn-default delete"><span class="am-icon-trash-o"></span> 删除</button>
+					</div>
+				</div>
+			</div>
+			<div class="am-u-sm-12 am-u-md-3 am-margin-top">
+				<div class="am-input-group am-input-group-sm">
+					<input type="text" name="keyword" class="am-form-field" value="{$Think.session.ckeyword}" placeholder="请输入查询关键字">
+					<span class="am-input-group-btn">
+						<button class="am-btn am-btn-default search" type="submit">搜索</button>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="am-g">
+			<div class="am-u-sm-12">
+				<table class="am-table text-overflow am-table-striped am-table-hover table-main am-table-centered">
+					<thead>
+						<tr><th style="width: 30px"><input type="checkbox" name="selectall" onclick="selAll();"></th><th class="am-hide-sm-only" style="width: 30px">ID</th><th>标题</th><th style="width: 100px">创建者</th><th class="am-hide-sm-only" style="width: 150px">开始时间</th><th class="am-hide-sm-only" style="width: 150px">截止时间</th><th style="width: 300px">操作</th></tr>
+					</thead>
+					<tbody id="body">
+					</tbody>
+				</table>
+				<ul class="am-pagination am-pagination-centered">
+				</ul>
+				<br><br><br><br>
+			</div>
+		</div>
+		<div class="am-modal am-modal-no-btn" tabindex="-1" id="add-modal" style="margin-top: -300px !important;">
+			<div class="am-modal-dialog">
+				<div class="am-modal-hd">新增考试
+					<a href="javascript: void(0)" class="am-close" data-am-modal-close>&times;</a>
+				</div>
+				<div class="am-modal-bd am-g am-text-left">
+					<form method="post" action="../common/add" class="am-form" id="add">
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="chapter" class="am-u-md-2">信息</label>
+								<div class="am-u-md-5">
+								<input type="hidden" name="table" value="test">
+									<select name="courseid" class="am-form-field course" required>
+										<option value="">请选择课程</option>
+										<volist name="course" id="item">
+										<option value="{$item.id}" <if condition="$item['id'] eq $data['course']">selected</if>>{$item.title}</option>
+										</volist>
+									</select>
+									<input type="text" name="title" class="am-form-field am-margin-top" placeholder="请设置考试名称">
+								</div>
+								<div class="am-u-md-5">
+									<select name="range[]" multiple class="am-form-field pid" required>
+										<option value="">请先选择课程</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="difficulty" class="am-u-md-2">时间</label>
+								<div class="am-u-md-5">
+									<input type="date" name="start" class="am-form-field" data-am-datepicker>
+								</div>
+								<div class="am-u-md-5">
+									<input type="date" name="end" class="am-form-field" data-am-datepicker>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="chapter" class="am-u-md-2">时长</label>
+								<div class="am-u-md-10">
+									<input type="number" name="time" class="am-form-field" placeholder="请设置考试时长，分钟为单位">
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="type" class="am-u-md-2">选择题</label>
+								<div class="am-u-md-10 am-form-inline">
+									<div class="am-form-group">
+										<input type="text" name="qids[choice][简单]" placeholder="请设置简单题目数量">
+									</div>
+									<div class="am-form-group">
+										<input type="text" name="qids[choice][一般]" placeholder="请设置一般题目数量">
+									</div>
+									<div class="am-form-group">
+										<input type="text" name="qids[choice][困难]" placeholder="请设置困难题目数量">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="type" class="am-u-md-2">判断题</label>
+								<div class="am-u-md-10 am-form-inline">
+									<div class="am-form-group">
+										<input type="text" name="qids[judge][简单]" placeholder="请设置简单题目数量">
+									</div>
+									<div class="am-form-group">
+										<input type="text" name="qids[judge][一般]" placeholder="请设置一般题目数量">
+									</div>
+									<div class="am-form-group">
+										<input type="text" name="qids[judge][困难]" placeholder="请设置困难题目数量">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="type" class="am-u-md-2">填空题</label>
+								<div class="am-u-md-10 am-form-inline">
+									<div class="am-form-group">
+										<input type="text" name="qids[filling][简单]" placeholder="请设置简单题目数量">
+									</div>
+									<div class="am-form-group">
+										<input type="text" name="qids[filling][一般]" placeholder="请设置一般题目数量">
+									</div>
+									<div class="am-form-group">
+										<input type="text" name="qids[filling][困难]" placeholder="请设置困难题目数量">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="type" class="am-u-md-2">主观题</label>
+								<div class="am-u-md-10 am-form-inline">
+									<div class="am-form-group">
+										<input type="text" name="qids[subjective][简单]" placeholder="请设置简单题目数量">
+									</div>
+									<div class="am-form-group">
+										<input type="text" name="qids[subjective][一般]" placeholder="请设置一般题目数量">
+									</div>
+									<div class="am-form-group">
+										<input type="text" name="qids[subjective][困难]" placeholder="请设置困难题目数量">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<input type="submit" name="submit" class="am-btn am-btn-primary am-btn-block am-radius" value="提 交">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</block>
+	<block name="script">
+	<script>
+		testlist();
+		$('.search').click(function(){
+			testlist(1, $('input[name=keyword]').val());
+		});
+		$('.delete').click(function(){
+			var ids = []; 
+			$('input[name="ids"]:checked').each(function(){ 
+				ids.push($(this).val()); 
+			});
+			if(ids.length == 0) {
+				showFail('请选择要删除的内容！');
+			} else {
+				deletekey('test', ids);
+			}
+		});
+		$('input[name="type[]"]').change(function() {
+			$('input[name="type[]"]').each(function(){
+				value = $(this).val();
+				if($('input[name="type[]"][value='+value+']').is(':checked')){
+					$('input[name="'+value+'"]').attr('disabled', false);
+				} else {
+					$('input[name="'+value+'"]').attr('disabled', true);
+				}
+			});
+		});
+		$('#add .course').change(function(){
+			infoRequest('../common/getSectionInfo', $(this).val(), function(data){
+				$('.pid').html('<option value="">-按住Ctrl可多选-</option>'+data.data);
+			});
+		});
+	</script>
+	</block>

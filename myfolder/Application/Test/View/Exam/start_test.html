@@ -1,0 +1,154 @@
+<extend name="Layout/base" />
+<block name="title">统一考试 - {:C('SYS_NAME')}</block>
+<block name="page_title">统一考试</block>
+<block name="page_title_en">Exam</block>
+<block name="main">
+			<style>
+				a{color:black;}
+				.relax{ -webkit-filter: blur(3px);}
+				.am-btn-danger,.am-btn-success{width:43px;height:33px;padding:6px 12px 6px 12px;}
+			</style>
+			<div class="am-g">
+				<ol class="am-breadcrumb am-padding-left">
+					<li><a href="#">首页</a></li>
+					<li><a href="#">统一考试</a></li>
+					<li><a href="#">{:getCourseNameById($data['courseid'])}</a></li>
+					<li class="am-active">{$data.title}</li>
+				</ol>
+				<div class="am-u-md-3 am-u-lg-3">
+					<div class="daohang am-text-center" data-am-sticky="{top:100}">
+						<p class="am-text-center">
+							倒计时
+						</p>
+						<p class="am-text-center am-text-danger" id="timer" style="font-size: 24px;">{$data.time}分0秒</p>
+						<span class="am-btn am-btn-block am-btn-primary am-round am-margin-top submit">我要交卷</span>
+						<div class="am-btn-group am-margin-top">
+							<for start="1" end="$total +1" name="i"><a href="#ques{$i-1}"><button id="status{$i}" class="am-btn am-btn-danger">{$i}</button></a>
+							</for>
+						</div>
+						<p>*红色表示未作答，绿色表示已作答，点击题号可跳转至相应题目。</p>
+					</div>
+				</div>
+				<div class="am-u-md-9 am-u-lg-9 question" id="question">
+					<form method="post" action="">
+					<input type="hidden" name="tid" value="{$Think.get.id}">
+					<if condition="$ques['choice']">
+					<p id="0">不定项选择题</p>
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="ques.choice" id="item">
+						<if condition="$item.type eq 'single'">
+
+						<li id="ques{++$count}">
+							{$count}、{$item.title}
+
+							<ul class="am-list am-list-static">
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="A" id="{$count}" data-am-ucheck> A、{$item.ansa}</label></li>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="B" id="{$count}" data-am-ucheck> B、{$item.ansb}</label></li>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="C" id="{$count}" data-am-ucheck> C、{$item.ansc}</label></li>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="D" id="{$count}" data-am-ucheck> D、{$item.ansd}</label></li>
+							</ul>
+						</li>
+						<else/>
+<li id="ques{++$count}">
+							[多选]{$count}、{$item.title}
+							
+							<ul class="am-list am-list-static">
+								<li><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="c{$item.cid}[]" value="A" id="{$count}" data-am-ucheck> A、{$item.ansa}</label></li>
+								<li><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="c{$item.cid}[]" value="B" id="{$count}" data-am-ucheck> B、{$item.ansb}</label></li>
+								<li><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="c{$item.cid}[]" value="C" id="{$count}" data-am-ucheck> C、{$item.ansc}</label></li>
+								<li><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="c{$item.cid}[]" value="D" id="{$count}" data-am-ucheck> D、{$item.ansd}</label></li>
+							</ul>
+						</li>
+						</if>
+						</volist>
+					</ul>
+					</if>
+					<if condition="$ques['judge']">
+					<p>判断题</p>
+
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="ques.judge" id="item" key="last">
+						<li id="ques{++$count}">
+							{$count}、{$item.title}
+
+							<ul class="am-list am-list-static">
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="j{$item.jid}" value="正确" id="{$count}" data-am-ucheck> 正确</label></li>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="j{$item.jid}" value="错误" id="{$count}" data-am-ucheck> 错误</label></li>
+							</ul>
+						</li>
+						</volist>
+					</ul>
+					</if>
+					<if condition="$ques['filling']">
+					<p>填空题</p>
+
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="ques.filling" id="item" key="last">
+						<li id="ques{++$count}">
+							{$count}、{$item.title}
+
+							<ul class="am-list am-list-static">
+								<li><textarea class="am-form-field" id="{$count}" name="f{$item.fid}" rows="2" placeholder="输入你的答案"></textarea></li>
+							</ul>
+						</li>
+						</volist>
+					</ul>
+					</if>
+					<if condition="$ques['subjective']">
+					<p>主观题</p>
+
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="ques.subjective" id="item">
+						<li id="ques{++$count}">
+							{$count}、{$item.title}
+
+							<ul class="am-list am-list-static">
+								<li><textarea class="am-form-field" name="s{$item.sid}" id="{$count}" rows="5" placeholder="输入你的答案"></textarea></li>
+							</ul>
+						</li>
+						</volist>
+					</ul>
+					</if>
+					</form>
+				</div>
+			</div>
+	</block>
+	<block name="script">
+	<script>
+		$('.submit').click(function(){
+			if (confirm('你确认要提交吗？')){
+				$('form').submit();
+			}
+		});
+		document.oncontextmenu = new Function('event.returnValue=false;');
+		document.onselectstart = new Function('event.returnValue=false;');
+		var maxtime = {$data['time']*60-1};
+		function Count(){
+			if(maxtime>=0){
+				minutes = Math.floor(maxtime/60);
+				seconds = Math.floor(maxtime%60);
+				msg = minutes+"分"+seconds+"秒";
+				document.getElementById('timer').innerHTML=msg;
+				--maxtime;
+				if (maxtime == 298) alert('注意，还有五分钟就交卷了！');
+			} else {
+				alert('时间到自动交卷=。=');
+				$('form').submit();
+			}
+		}
+		timer = setInterval("Count()",1000);
+		$('textarea').change(function(){
+			$('#status'+$(this).attr("id")).removeClass('am-btn-danger');
+			$('#status'+$(this).attr("id")).addClass('am-btn-success');
+		});
+		$('input').change(function(){
+			if ($(this).prop("checked")) {
+				$('#status'+$(this).attr("id")).removeClass('am-btn-danger');
+				$('#status'+$(this).attr("id")).addClass('am-btn-success');
+			} else {
+				$('#status'+$(this).attr("id")).removeClass('am-btn-success');
+				$('#status'+$(this).attr("id")).addClass('am-btn-danger');
+			}
+		});
+	</script>
+	</block>

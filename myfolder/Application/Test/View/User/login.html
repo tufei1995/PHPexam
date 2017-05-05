@@ -1,0 +1,25 @@
+<extend name="base" />
+<block name="title">登录 - {:C('SYS_NAME')}</block>
+<block name="h1">登录</block>
+<block name="h4">使用你的帐户</block>
+<block name="btn">
+			<div class="am-btn-group" style="text-align:center;">
+				<a title="使用QQ账号登录" href="http://www.suifengpiaoyang.cn/api/qq.php?system=test" class="am-btn am-btn-success am-btn-vsm"><i class="am-icon-qq am-icon-sm"></i> QQ登录</a>
+				<a title="使用微博账号登录" href="http://www.suifengpiaoyang.cn/api/wb.php?system=test" class="am-btn am-btn-danger am-btn-vsm"><i class="am-icon-weibo am-icon-sm"></i> 微博登陆</a>
+			</div>
+</block>
+<block name="form">
+				<div class="am-form-group am-margin-top">
+					<label for="username" class="am-form-label">学号/工号</label>
+					<input type="text" name="username" id="username" placeholder="请输入学号/工号" class="am-form-field" value="{$Think.post.username}">
+				</div>
+				<div class="am-form-group am-margin-top">
+					<label for="password" class="am-form-label">密码</label>
+					<input type="password" name="password" id="password" placeholder="请输入密码" class="am-form-field" value="{$Think.post.password}">
+				</div>
+				<div class="am-form-group am-margin-top">
+					<input type="submit" name="login" value="登 录" class="am-btn am-btn-primary am-btn-sm am-fl">
+					<a href="../user/register" style="margin-left:10px;" class="am-btn am-btn-default am-btn-sm am-fr">注 册</a>
+					<a href="../user/resetPassword" style="margin-left:10px;" class="am-btn am-btn-default am-btn-sm am-fr">忘记密码</a>
+				</div>
+</block>

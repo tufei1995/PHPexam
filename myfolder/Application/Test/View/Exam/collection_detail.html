@@ -1,0 +1,61 @@
+<extend name="Layout/base" />
+<block name="title">我的收藏 - {:C('SYS_NAME')}</block>
+<block name="page_title">我的收藏</block>
+<block name="page_title_en">collection</block>
+<block name="main">
+			<style>
+				.am-btn-danger,.am-btn-success{width:43px;height:33px;padding:6px 12px 6px 12px;}
+			</style>
+			<div class="am-g">
+				<ol class="am-breadcrumb am-padding-left">
+					<li><a href="../index/index">首页</a></li>
+					<li>我的考试</li>
+					<li><a href="./collection">我的收藏</a></li>
+					<li class="am-active">{:getChainNameById($_GET['id'])}</li>
+				</ol>
+				<div class="am-u-md-12 am-u-lg-12 question" id="question">
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="ques.choice" id="item">
+						<li id="{++$key}">
+							<if condition="$item.type neq 'single'">[多选]</if>{$key}、{$item.title}<span class="am-fr"><a id="cstara{$item.cid}" href="javascript:collect({$item.cid}, 'choice', 1)" style="display: inline;"><span id="cstar{$item.cid}" class="am-icon-star"></span></a></span>
+							<ul class="am-list am-list-static">
+								<if condition="$item.type neq 'single'">
+								<li><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="c{$item.cid}[]" value="A" data-am-ucheck> A、{$item.ansa}</li></label>
+								<li><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="c{$item.cid}[]" value="B" data-am-ucheck> B、{$item.ansb}</li></label>
+								<li><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="c{$item.cid}[]" value="C" data-am-ucheck> C、{$item.ansc}</li></label>
+								<li><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="c{$item.cid}[]" value="D" data-am-ucheck> D、{$item.ansd}</li></label>
+								<else/>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="A" data-am-ucheck> A、{$item.ansa}</li></label>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="B" data-am-ucheck> B、{$item.ansb}</li></label>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="C" data-am-ucheck> C、{$item.ansc}</li></label>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="D" data-am-ucheck> D、{$item.ansd}</li></label>
+								</if>
+							</ul>
+							答案：<span class="c{$item.cid}" style="display:none;">{$item.right_ans}</span><a href="javascript:;" id="c{$item.cid}" class="answer am-icon-eye" style="display: inline;" title="点击查看答案"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;难度：{$item.difficulty}
+						</li>
+						</volist>
+						<volist name="ques.judge" id="item" key="last">
+						<li id="{:count($ques['choice'])+$key+1}">
+							{:count($ques['choice'])+$key+1}、{$item.title}<span class="am-fr"><a id="jstara{$item.jid}" href="javascript:collect({$item.jid}, 'judge', 1)" style="display: inline;"><span id="jstar{$item.jid}" class="am-icon-star"></span></a></span>
+							<ul class="am-list am-list-static">
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="正确" data-am-ucheck>正确</li></label>
+								<li><label class="am-radio am-radio-inline"><input type="radio" name="c{$item.cid}" value="错误" data-am-ucheck>错误</li></label>
+							</ul>
+							答案：<span class="j{$item.jid}" style="display:none;">{$item.right_ans}</span><a href="javascript:;" id="j{$item.jid}" class="answer am-icon-eye" style="display: inline;" title="点击查看答案"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;难度：{$item.difficulty}
+						</li>
+						</volist>
+					</ul>
+				</div>
+			</div>
+	</block>
+	<block name="script">
+	<script>
+		document.oncontextmenu = new Function('event.returnValue=false;');
+		document.onselectstart = new Function('event.returnValue=false;');
+		$(".am-icon-eye").click(function(){
+			id = $(this).attr('id');
+			$('.'+id).show();
+			$(this).addClass('am-icon-eye-slash');
+		});
+	</script>
+	</block>

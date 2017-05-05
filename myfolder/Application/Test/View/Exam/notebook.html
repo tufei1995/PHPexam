@@ -1,0 +1,26 @@
+<extend name="Layout/base" />
+<block name="title">错题记录 - {:C('SYS_NAME')}</block>
+<block name="page_title">错题记录</block>
+<block name="page_title_en">notebook</block>
+<block name="main">
+		<div class="am-g">
+			<div class="am-u-sm-12">
+				<table class="am-table text-overflow am-table-striped am-table-hover table-main am-table-centered">
+					<thead>
+						<tr><th>章节</th><th style="width: 50px">总数</th><th style="width: 100px">错题数量</th><th class="am-hide-sm-only" style="width: 150px">完成时间</th><th style="width: 100px">操作</th></tr>
+					</thead>
+					<tbody id="body">
+					<if condition="$data">
+					<volist name="data" id="item">
+					<if condition="$item['total'] neq $item['status']">
+					<tr><td>{$item.title}</td><td>{$item.total}道</td><td>{$item['done']-$item['status']}道</td><td class="am-hide-sm-only">{$item.time}</td><td><a href="?id={$item.id}">查看</a></td></tr>
+					</volist>
+					<else/>
+					<tr><td colspan=5><span class='am-icon-warning'></span> 暂无数据</td></tr>
+					</if>
+					</tbody>
+				</table>
+				<br><br><br><br>
+			</div>
+		</div>
+	</block>

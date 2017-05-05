@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="author" content="涂飞" />
+	<meta name="contact" content="614128926@qq.com" />
+	<!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
+	<block name="head"><include file="Layout/head"/></block>
+	<title><block name="title">考试系统</block></title>
+</head>
+<body>
+	<block name="header"><include file="Layout/header"/></block>
+	<div class="admin-main">
+		<!-- sidebar start -->
+		<block name="sidebar"><include file="Layout/sidebar"/></block>
+		<!-- sidebar end -->
+
+		<!-- content start -->
+		<div class="admin-content">
+			<div class="am-cf am-padding">
+				<div class="am-fl am-cf"><strong class="am-text-primary am-text-lg"><block name="page_title">考试系统</block></strong> / <small><block name="page_title_en">Personal information</block></small></div>
+			</div>
+			<block name="main"></block>
+		</div>
+		<!-- content end -->
+
+		<a href="#" class="am-icon-btn am-icon-th-list am-show-sm-only admin-menu" data-am-offcanvas="{target: '#admin-offcanvas'}"></a>
+	</div>
+	<block name="footer"><include file="Layout/footer"/></block>
+	<script>
+		$('#collapse-{$Think.CONTROLLER_NAME}').addClass('am-in');
+		//$('#collapse-{$Think.CONTROLLER_NAME}').parent().children("a").children(".am-fr").attr('class', 'am-icon-angle-down am-fr am-margin-right');
+	</script>
+	<block name="script"></block>
+</body>
+</html>

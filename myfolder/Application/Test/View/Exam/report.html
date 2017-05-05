@@ -1,0 +1,84 @@
+<extend name="Layout/base" />
+<block name="title">测试报告 - {:C('SYS_NAME')}</block>
+<block name="page_title">测试报告</block>
+<block name="page_title_en">report</block>
+<block name="main">
+			<style>
+				.am-btn-danger,.am-btn-success{width:43px;height:33px;padding:6px 12px 6px 12px;}
+			</style>
+			<div class="am-g">
+				<ol class="am-breadcrumb am-padding-left">
+					<li><a href="../index/index">首页</a></li>
+					<li><a href="./selftest">测试报告</a></li>
+					<li><a href="./selftest?id={$data.courseid}">{:getCourseNameById($data['courseid'])}</a></li>
+					<li class="am-active">{:getChapterAndSectionNameById($data['id'])}</li>
+				</ol>
+				<div class="am-u-md-3 am-u-lg-3">
+					<div class="daohang am-text-center" data-am-sticky="{top:100}">
+						<p class="am-text-center">{$total}道题，您答对了</p>
+						<p class="am-text-center am-text-success" id="timer" style="font-size: 24px;"></p>
+						<p><label class="am-checkbox am-checkbox-inline"><input type="checkbox" name="onlywrong" value="yes" id="onlywrong" data-am-ucheck> 只看错题</label></p>
+						<div class="am-btn-group am-margin-top">
+							<for start="1" end="$total +1" name="i"><a href="#{$i-1}"><button id="status{$i}" class="am-btn am-btn-success">{$i}</button></a>
+							</for>
+						</div>
+						<p>*点击题号可跳转至相应题目。</p>
+					</div>
+				</div>
+				<div class="am-u-md-9 am-u-lg-9">
+					<p id="0">一、不定项选择题</p>
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="choice" id="item" empty="暂时没有需要回答的选择题！">
+						<li id="{++$key}" class="<if condition="$cids[$item['cid']] eq $item['right_ans']">right<else/>wrong</if>">
+							<if condition="$item.type neq 'single'">[多选]</if>{$key}、{$item.title}<span class="am-fr"><a id="cstara{$item.cid}" href="javascript:collect({$item.cid}, 'choice', <php>echo $collect['c'.$item['cid']];</php>)" style="display: inline;"><span id="cstar{$item.cid}" class="am-icon-star<if condition="$collect['c'.$item['cid']] neq '1'">-o</if>"></span></a></span>
+							<ul class="am-list am-list-static">
+								<li>A、{$item.ansa}</li>
+								<li>B、{$item.ansb}</li>
+								<li>C、{$item.ansc}</li>
+								<li>D、{$item.ansd}</li>
+							</ul>
+							你的回答：<php>echo $cids[$item['cid']];</php>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;答案：{$item.right_ans}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;回答<if condition="$cids[$item['cid']] eq $item['right_ans']"><span class="am-text-success">正确</span><else/><span class="am-text-danger">错误</span></if>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;难度：{$item.difficulty}
+						</li>
+						</volist>
+					</ul>
+					<p>二、判断题</p>
+
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="judge" id="item" key="last" empty="暂时没有需要回答的判断题！">
+						<li id="{++$count}" class="<if condition="$jids[$item['jid']] eq $item['right_ans']">right<else/>wrong</if>">
+							{$count}、{$item.title}<span class="am-fr"><a id="jstara{$item.jid}" href="javascript:collect({$item.jid}, 'judge', <php>echo $collect['j'.$item['jid']];</php>)" style="display: inline;"><span id="jstar{$item.jid}" class="am-icon-star<if condition="$collect['j'.$item['jid']] neq '1'">-o</if>"></span></a></span>
+							<ul class="am-list am-list-static">
+								<li>正确</li>
+								<li>错误</li>
+							</ul>
+							你的回答：<php>echo $jids[$item['jid']];</php>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;答案：{$item.right_ans}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;回答<if condition="$jids[$item['jid']] eq $item['right_ans']"><span class="am-text-success">正确</span><else/><span class="am-text-danger">错误</span></if>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;难度：{$item.difficulty}
+						</li>
+						</volist>
+					</ul>
+				</div>
+			</div>
+	</block>
+	<block name="script">
+	<script>
+		document.oncontextmenu = new Function('event.returnValue=false;');
+		document.onselectstart = new Function('event.returnValue=false;');
+		$(".wrong").each(function(k, v){
+			$('#status'+$(v).attr("id")).removeClass('am-btn-success');
+			$('#status'+$(v).attr("id")).addClass('am-btn-danger');
+		});
+		$('#timer').html(($("*[class='right']").length)+'道');
+		$('#onlywrong').change(function(){
+			if($("input[name=onlywrong]").is(':checked')){
+				$(".right").each(function(k, v){
+					$('#status'+$(v).attr("id")).hide();
+					$(v).hide();
+				});
+			} else {
+				$(".right").each(function(k, v){
+					$('#status'+$(v).attr("id")).show();
+					$(v).show();
+				});
+			}
+		});
+	</script>
+	</block>

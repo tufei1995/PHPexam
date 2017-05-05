@@ -1,0 +1,90 @@
+<extend name="Layout/base" />
+<block name="title">个人资料 - {:C('SYS_NAME')}</block>
+<block name="page_title">个人资料</block>
+<block name="page_title_en">Personal information</block>
+<block name="main">
+			<div class="am-g">
+				<div class="am-u-sm-12 am-u-md-8 am-u-md-push-4">
+					<form class="am-form am-form-horizontal" action="" method="POST" enctype="multipart/form-data" data-am-validator>
+						<div class="am-u-md-12">
+							<div class="am-form-group">
+								<label for="name" class="am-u-md-2 am-form-label">姓名</label>
+								<div class="am-u-md-10">
+									<input class="am-form-field" type="text" required name="name" id="name" placeholder="请输入姓名" value="{$data.name}">
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group">
+								<label for="username" class="am-u-md-2 am-form-label">学号</label>
+								<div class="am-u-md-10">
+									<input class="am-form-field" type="text" required name="username" id="username" placeholder="请输入学号" value="{$data.username}">
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group">
+								<label for="username" class="am-u-md-2 am-form-label">电子邮箱</label>
+								<div class="am-u-md-10">
+									<input class="am-form-field" type="email" required name="email" id="email" placeholder="请输入电子邮箱" value="{$data.email}">
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group">
+								<label for="college" class="am-u-md-2 am-form-label">学院</label>
+								<div class="am-u-md-10">
+									<select name="college" id="college" class="am-form-field" required>
+										<option value="">--请选择学院--</option>
+										<volist name="college" id="item">
+										<option value="{$item.id}" <if condition="$item['id'] eq $data['college']">selected</if>>{$item.title}</option>
+										</volist>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group">
+								<label for="class" class="am-u-md-2 am-form-label">班级</label>
+								<div class="am-u-md-10">
+									<select name="class" id="class" class="am-form-field" required>
+										<option value="">--请先选择学院信息--</option>
+										<volist name="class" id="item">
+										<option value="{$item.id}" <if condition="$item['id'] eq $data['class']">selected</if>>{$item.title}</option>
+										</volist>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12 am-text-center am-margin-top">
+							<input type="hidden" name="type" value="2">
+							<input type="submit" class="am-btn am-btn-primary am-radius" value="保存修改">
+						</div>
+						<div class="am-u-md-12" style="height:100px;"></div>
+					</form>
+				</div>
+				<div class="am-u-sm-12 am-u-md-4 am-u-md-pull-8">
+					<div class="am-panel am-panel-default">
+						<div class="am-panel-bd">
+							<div class="am-g">
+								<div class="am-u-md-4">
+									<img class="am-img-circle am-img-thumbnail" src="https://q.qlogo.cn/qqapp/101257482/{$Think.session.oid}/100" alt=""/>
+								</div>
+								<div class="am-u-md-8">
+									<p>你<if condition="$_SESSION['oid']">已<else/>可以</if>使用QQ提供的头像</p>
+									<a href="<if condition="$_SESSION['oid']">../my/unbind<else/>http://www.suifengpiaoyang.cn/api/qq.php?system=test</if>" class="am-btn am-btn-primary am-btn-block am-btn-sm">点击此处<if condition="$_SESSION['oid']">解绑<else/>绑定</if></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			</block>
+			<block name="script">
+			<script>
+				$('#college').change(function(){
+					classInfo($(this).val());
+				});
+			</script>
+			</block>

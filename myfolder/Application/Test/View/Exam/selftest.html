@@ -1,0 +1,37 @@
+<extend name="Layout/base" />
+<block name="title">自我测试 - {:C('SYS_NAME')}</block>
+<block name="page_title">自我测试</block>
+<block name="page_title_en">self test</block>
+<block name="main">
+		<style>
+			.am-progress-bar{color:black;}
+		</style>
+		<ul class="am-avg-sm-2 am-avg-md-4 am-avg-lg-4 am-margin gallery-list">
+			<volist name="course" id="item">
+			<li>
+				<a href="javascript:selftest({$item.id});" data-am-modal="{target: '#detail', closeViaDimmer: 1}">
+					<img class="am-img-thumbnail am-img-bdrs" src="{$item.cover}" alt=""/>
+					<div class="gallery-title am-text-center" id="{$item.id}">{$item.title}</div>
+				</a>
+			</li>
+			</volist>
+		</ul>
+		<div class="am-modal am-modal-no-btn" tabindex="-1" id="detail">
+			<div class="am-modal-dialog">
+				<div class="am-modal-hd"><div class="title"></div>
+					<a href="javascript: void(0)" class="am-close" data-am-modal-close>&times;</a>
+				</div>
+				<div class="am-modal-bd am-g am-text-left detail_text">
+
+				</div>
+			</div>
+		</div>
+	</block>
+	<block name="script">
+	<if condition="$_GET['id']">
+	<script>
+		$('#detail').modal({closeViaDimmer: 1});
+		selftest({$Think.get.id});
+	</script>
+	</if>
+	</block>

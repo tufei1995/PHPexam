@@ -1,0 +1,26 @@
+<extend name="Layout/base" />
+<block name="title">学生自测 - {:C('SYS_NAME')}</block>
+<block name="page_title">学生自测</block>
+<block name="page_title_en">selftest</block>
+<block name="main">
+		<div class="am-g">
+			<div class="am-u-sm-12">
+				<table class="am-table text-overflow am-table-striped am-table-hover table-main am-table-centered">
+					<p>章节信息：{:getChainNameById($_GET['id'])}</p>
+					<thead>
+						<tr><th style="width: 50px">序号</th><th>姓名</th><th>班级</th><th>学号</th><th>总数</th><th>正确</th><th>正确率</th><th>选择题(正确/已做)</th><th>填空题(正确/已做)</th><th>正确率(选择/填空)</th></tr>
+					</thead>
+					<tbody id="body">
+					<if condition="$data">
+					<volist name="data" id="item">
+					<tr><td>{$key+1}</td><td>{$item.name}</td><td>{$item.class}</td><td>{$item.sno}</td><td>{$item.done}</td><td>{$item.right}</td><td>{$item['right']/$item['done']*100|substr=0,5}%</td><td>{$item.choice_right}/{$item.choice}</td><td>{$item.judge_right}/{$item.judge}</td><td>{$item['choice_right']/$item['choice']*100|substr=0,5}%/{$item['judge_right']/$item['judge']*100|substr=0,5}%</td></tr>
+					</volist>
+					<else/>
+					<tr><td colspan=5><span class='am-icon-warning'></span> 暂无数据</td></tr>
+					</if>
+					</tbody>
+				</table>
+				<br><br><br><br>
+			</div>
+		</div>
+	</block>

@@ -1,0 +1,14 @@
+<extend name="Layout/base" />
+<block name="title">首页 - {:C('SYS_NAME')}</block>
+<block name="page_title">首页</block>
+<block name="page_title_en">欢迎使用</block>
+<block name="main">
+			<ul class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list ">
+				<li class="am-text-secondary"><span class="am-icon-btn am-secondary am-icon-user-md"></span><br/>欢迎您：<if condition="$_SESSION['name']">{$Think.session.name}<else/>{$Think.session.username}</if></a></li>
+				<li class="am-text-success"><span class="am-icon-btn am-success am-icon-file-text"></span><br/>登录IP：{$Think.server.REMOTE_ADDR}</a></li>
+				<li class="am-text-danger"><span class="am-icon-btn am-danger am-icon-sitemap"></span><br/>用户类型：{$Think.session.group}</a></li>
+				<li class="am-text-warning"><span class="am-icon-btn am-warning am-icon-envelope-o"></span><br/>未读消息：{$Think.session.messages}</a></li>
+			</ul>
+			<div class="am-g" style="height:400px;">
+			</div>
+		</div></block>

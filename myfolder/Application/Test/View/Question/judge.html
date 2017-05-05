@@ -1,0 +1,233 @@
+<extend name="Layout/base" />
+<block name="title">判断题管理 - {:C('SYS_NAME')}</block>
+<block name="page_title">判断题管理</block>
+<block name="page_title_en">judge</block>
+<block name="main">
+		<div class="am-g">
+			<div class="am-u-sm-12 am-u-md-3 am-margin-top">
+				<div class="am-btn-toolbar">
+					<div class="am-btn-group am-btn-group-xs">
+						<button type="button" class="am-btn am-btn-primary" data-am-modal="{target: '#add-modal', closeViaDimmer: 1, width: 600}"><span class="am-icon-plus"></span> 新增</button>
+						<button type="button" class="am-btn am-btn-default delete"><span class="am-icon-trash-o"></span> 删除</button>
+					</div>
+				</div>
+			</div>
+			<div class="am-u-sm-12 am-u-md-3 am-margin-top">
+				<div class="am-input-group-sm am-input-group am-form">
+					<span class="am-input-group-label">课程筛选</span>
+					<select name="courseid" class="am-form-field" id="course">
+						<option value="" selected>所有课程</option>
+						<volist name="course" id="item">
+						<option value="{$item.id}">{$item.title}</option>
+						</volist>
+					</select>
+				</div>
+			</div>
+			<div class="am-u-sm-12 am-u-md-3 am-margin-top">
+				<div class="am-input-group-sm am-input-group am-form">
+					<span class="am-input-group-label">章节筛选</span>
+					<select name="pid" class="am-form-field" id="chapter">
+						<option value="" selected>请先选择课程</option>
+						<option value="0" selected="">所有章节</option>
+					</select>
+				</div>
+			</div>
+			<div class="am-u-sm-12 am-u-md-3 am-margin-top">
+				<div class="am-input-group am-input-group-sm">
+					<input type="text" name="keyword" class="am-form-field" value="{$Think.session.ckeyword}" placeholder="请输入查询关键字">
+					<span class="am-input-group-btn">
+						<button class="am-btn am-btn-default search" type="submit">搜索</button>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="am-g">
+			<div class="am-u-sm-12">
+				<table class="am-table text-overflow am-table-striped am-table-hover table-main am-table-centered">
+					<thead>
+						<tr><th style="width: 30px"><input type="checkbox" name="selectall" onclick="selAll();"></th><th class="am-hide-sm-only" style="width: 30px">ID</th><th>标题</th><th style="width: 50px">答案</th><th style="width: 50px">难度</th><th class="am-hide-sm-only" style="width: 100px">章节</th><th style="width: 100px">操作</th></tr>
+					</thead>
+					<tbody id="body">
+					</tbody>
+				</table>
+				<ul class="am-pagination am-pagination-centered">
+				</ul>
+				<br><br><br><br>
+			</div>
+		</div>
+
+		<div class="am-modal am-modal-no-btn" tabindex="-1" id="edit-modal">
+			<div class="am-modal-dialog">
+				<div class="am-modal-hd">修改判断题
+					<a href="javascript: void(0)" class="am-close" data-am-modal-close>&times;</a>
+				</div>
+				<div class="am-modal-bd am-g am-text-left">
+					<form method="post" action="../common/edit" class="am-form" id="edit">
+						<input type="hidden" name="table" value="judge">
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="type" class="am-u-md-2">难度</label>
+								<div class="am-u-md-10">
+									<select name="difficulty" id="difficulty" class="am-form-field" required>
+										<option value="">请选择题目难度</option>
+										<option value="简单">简单</option>
+										<option value="一般">一般</option>
+										<option value="困难">困难</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="difficulty" class="am-u-md-2">题目内容</label>
+								<div class="am-u-md-10 am-u-sm-12">
+									<textarea name="title" id="title" required class="am-form-field" placeholder="请输入题目内容" rows="3"></textarea>
+									<input type="hidden" name="jid" id="jid" value="">
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="chapter" class="am-u-md-2">课程</label>
+								<div class="am-u-md-5">
+									<select name="course" class="am-form-field course" required>
+										<option value="">请选择课程</option>
+										<volist name="course" id="item">
+										<option value="{$item.id}" <if condition="$item['id'] eq $data['course']">selected</if>>{$item.title}</option>
+										</volist>
+										
+									</select>
+								</div>
+								<div class="am-u-md-5">
+									<select name="pid" class="am-form-field pid" required>
+										<option value="">请先选择课程</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="right_ans" class="am-u-md-2">答案</label>
+								<div class="am-u-md-10 ans">
+									<label class="am-radio am-radio-inline" style="margin-top:0px;">
+										<input type="radio" name="right_ans" value="正确" data-am-ucheck> 正确
+									</label> 
+									<label class="am-radio am-radio-inline"> 
+										<input type="radio" name="right_ans" value="错误" data-am-ucheck> 错误
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<input type="submit" name="submit" class="am-btn am-btn-primary am-btn-block am-radius" value="提 交">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div class="am-modal am-modal-no-btn" tabindex="-1" id="add-modal">
+			<div class="am-modal-dialog">
+				<div class="am-modal-hd">新增判断题
+					<a href="javascript: void(0)" class="am-close" data-am-modal-close>&times;</a>
+				</div>
+				<div class="am-modal-bd am-g am-text-left">
+					<form method="post" action="../common/add" class="am-form" id="add">
+						<input type="hidden" name="table" value="judge">
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="type" class="am-u-md-2">难度</label>
+								<div class="am-u-md-10">
+									<select name="difficulty" id="difficulty" class="am-form-field" required>
+										<option value="">请选择题目难度</option>
+										<option value="简单">简单</option>
+										<option value="一般">一般</option>
+										<option value="困难">困难</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="difficulty" class="am-u-md-2">题目内容</label>
+								<div class="am-u-md-10 am-u-sm-12">
+									<textarea name="title" id="title" required class="am-form-field" placeholder="请输入题目内容" rows="3"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="chapter" class="am-u-md-2">课程</label>
+								<div class="am-u-md-5">
+									<select name="course" class="am-form-field course" required>
+										<option value="">请选择课程</option>
+										<volist name="course" id="item">
+										<option value="{$item.id}" <if condition="$item['id'] eq $data['course']">selected</if>>{$item.title}</option>
+										</volist>
+									</select>
+								</div>
+								<div class="am-u-md-5">
+									<select name="pid" class="am-form-field pid" required>
+										<option value="">请先选择课程</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<label for="right_ans" class="am-u-md-2">答案</label>
+								<div class="am-u-md-10 ans">
+									<label class="am-radio am-radio-inline" style="margin-top:0px;">
+										<input type="radio" name="right_ans" value="正确" data-am-ucheck> 正确
+									</label> 
+									<label class="am-radio am-radio-inline"> 
+										<input type="radio" name="right_ans" value="错误" data-am-ucheck> 错误
+									</label>
+								</div>
+							</div>
+						</div>
+						<div class="am-u-md-12">
+							<div class="am-form-group am-margin-top">
+								<input type="submit" name="submit" class="am-btn am-btn-primary am-btn-block am-radius" value="提 交">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</block>
+	<block name="script">
+	<script>
+		judge();
+		$('.search').click(function(){
+			judge(1, $('input[name=keyword]').val());
+		});
+		$('.delete').click(function(){
+			var ids = []; 
+			$('input[name="ids"]:checked').each(function(){ 
+				ids.push($(this).val()); 
+			});
+			if(ids.length == 0) {
+				showFail('请选择要删除的内容！');
+			} else {
+				deletekey('judge', ids);
+			}
+		});
+		$('.course').change(function(){
+			infoRequest('../common/getSectionInfo', $(this).val(), function(data){
+				$('.pid').html('<option value="">--请选择章节--</option>'+data.data);
+			});
+		});
+		$('#course').change(function(){
+			infoRequest('../common/getSectionInfo', $(this).val(), function(data){
+				$('#chapter').html('<option value="">--请选择章节--</option>'+data.data);
+			});
+		});
+		$('#chapter').change(function(){
+			judge(1, $(this).val());
+		});
+	</script>
+	</block>

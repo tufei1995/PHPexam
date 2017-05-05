@@ -1,0 +1,109 @@
+<extend name="Layout/base" />
+<block name="title">试题分析 - {:C('SYS_NAME')}</block>
+<block name="page_title">试题分析</block>
+<block name="page_title_en">statistic</block>
+<block name="main">
+			<style>
+				a{color:black;}
+				.relax{ -webkit-filter: blur(3px);}
+				.am-btn-danger,.am-btn-success{width:43px;height:33px;padding:6px 12px 6px 12px;}
+			</style>
+			<div class="am-g">
+				<ol class="am-breadcrumb am-padding-left">
+					<li><a href="#">首页</a></li>
+					<li><a href="#">试题分析</a></li>
+					<li class="am-active">{$data.title}</li>
+				</ol>
+				<div class="am-u-md-12 am-u-lg-12 question" id="question">
+					<p>试题统计：共{$count.total.total|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;简单{$count.total.简单|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一般{$count.total.一般|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;困难{$count.total.困难|default=0}道题</p>
+					<p>选择题：共{$count.total.choice|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;简单{$count.choice.简单|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一般{$count.choice.一般|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;困难{$count.choice.困难|default=0}道题</p>
+					<p>判断题：共{$count.total.judge|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;简单{$count.judge.简单|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一般{$count.judge.一般|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;困难{$count.judge.困难|default=0}道题</p>
+					<p>填空题：共{$count.total.filling|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;简单{$count.filling.简单|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一般{$count.filling.一般|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;困难{$count.filling.困难|default=0}道题</p>
+					<p>主观题：共{$count.total.subjective|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;简单{$count.subjective.简单|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一般{$count.subjective.一般|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;困难{$count.subjective.困难|default=0}道题</p>
+					<p>按章节知识点统计</p>
+					<foreach name="count.pids" item="vo" key="k">
+					<p>{:getChainNameById($k)}：共{$vo|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;简单{$count['pid'][$vo]['简单']|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;一般{$count['pid'][$vo]['一般']|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;困难{$count['pid'][$vo]['困难']|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;选择题{$count['pid'][$vo]['choice']|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;判断题{$count['pid'][$vo]['judge']|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;填空题{$count['pid'][$vo]['filling']|default=0}道题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;主观题{$count['pid'][$vo]['subjective']|default=0}道题</p>
+					</foreach>
+					<form method="post" action="">
+					<input type="hidden" name="tid" value="{$Think.get.id}">
+					<if condition="$ques['choice']">
+					<p id="0">不定项选择题</p>
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="ques.choice" id="item">
+						<if condition="$item.type eq 'single'">
+
+						<li id="ques{++$xuhao}">
+							{$xuhao}、{$item.title}
+
+							<ul class="am-list am-list-static">
+								<li> A、{$item.ansa}</li>
+								<li> B、{$item.ansb}</li>
+								<li> C、{$item.ansc}</li>
+								<li> D、{$item.ansd}</li>
+							</ul>
+						</li>
+						<else/>
+<li id="ques{++$xuhao}">
+							[多选]{$xuhao}、{$item.title}
+							
+							<ul class="am-list am-list-static">
+								<li>A、{$item.ansa}</li>
+								<li>B、{$item.ansb}</li>
+								<li>C、{$item.ansc}</li>
+								<li>D、{$item.ansd}</li>
+							</ul>
+						</li>
+						</if>
+						</volist>
+					</ul>
+					</if>
+					<if condition="$ques['judge']">
+					<p>判断题</p>
+
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="ques.judge" id="item" key="last">
+						<li id="ques{++$xuhao}">
+							{$xuhao}、{$item.title}
+
+							<ul class="am-list am-list-static">
+								<li> 正确</li>
+								<li> 错误</li>
+							</ul>
+						</li>
+						</volist>
+					</ul>
+					</if>
+					<if condition="$ques['filling']">
+					<p>填空题</p>
+
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="ques.filling" id="item" key="last">
+						<li id="ques{++$xuhao}">
+							{$xuhao}、{$item.title}
+
+							<ul class="am-list am-list-static">
+								<li><textarea class="am-form-field" id="{$xuhao}" name="f{$item.fid}" rows="2" placeholder="输入你的答案"></textarea></li>
+							</ul>
+						</li>
+						</volist>
+					</ul>
+					</if>
+					<if condition="$ques['subjective']">
+					<p>主观题</p>
+
+					<ul class="am-list am-list-static am-list-border">
+						<volist name="ques.subjective" id="item">
+						<li id="ques{++$xuhao}">
+							{$xuhao}、{$item.title}
+
+							<ul class="am-list am-list-static">
+								<li><textarea class="am-form-field" name="s{$item.sid}" id="{$xuhao}" rows="5" placeholder="输入你的答案"></textarea></li>
+							</ul>
+						</li>
+						</volist>
+					</ul>
+					</if>
+					</form>
+				</div>
+			</div>
+	</block>

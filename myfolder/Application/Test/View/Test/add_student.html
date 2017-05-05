@@ -1,0 +1,77 @@
+<extend name="Layout/base" />
+<block name="title">新增考生 - {:C('SYS_NAME')}</block>
+<block name="page_title">新增考生</block>
+<block name="page_title_en">add</block>
+<block name="main">
+		<div class="am-g">
+			<div class="am-u-sm-12 am-u-md-5">
+				<ol class="am-breadcrumb am-padding-left">
+					<li><a href="../index/index">首页</a></li>
+					<li><a href="./lists">考试列表</a></li>
+					<li><a href="./student_list?id={$Think.get.id}">考生名单</a></li>
+					<li class="am-active">新增考生</li>
+				</ol>
+			</div>
+			<div class="am-u-sm-12 am-u-md-6 am-fr">
+				<div class="am-form am-form-inline am-form-inline-sm am-fr">
+					<div class="am-form-group">
+						<select name="college" id="college" class="am-form-field am-input-sm" required>
+							<option value="">请选择学院</option>
+							<volist name="college" id="item">
+							<option value="{$item.id}" <if condition="$item['id'] eq $data['college']">selected</if>>{$item.title}</option>
+							</volist>
+						</select>
+					</div>
+					<div class="am-form-group">
+						<select name="class" id="class" class="am-form-field am-input-sm" required>
+							<option value="">请先选择学院</option>
+							<volist name="class" id="item">
+							<option value="{$item.id}" <if condition="$item['id'] eq $data['class']">selected</if>>{$item.title}</option>
+							</volist>
+						</select>
+					</div>
+					<div class="am-form-group">
+						<button class="am-btn am-btn-default search am-input-sm" type="submit">搜索</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="am-u-sm-12">
+				<table class="am-table text-overflow am-table-striped am-table-hover table-main am-table-centered">
+					<thead>
+						<tr><th style="width: 30px"><input type="checkbox" name="selectall" onclick="selAll();"></th><th class="am-hide-sm-only">ID</th><th>用户名</th><th>学号/工号</th><th>班级</th><th style="width: 150px">操作</th></tr>
+					</thead>
+					<tbody id="body">
+					</tbody>
+				</table>
+				<br><br><br><br>
+			</div>
+			<div class="am-u-md-12 am-u-lg-12 am-text-center">
+				<input type="submit" class="am-btn am-btn-primary submit" value="提交">
+			</div>
+		</div>
+		</block>
+		<block name="script">
+		<script>
+			addstudent();
+			$('.search').click(function(){
+				addstudent(1, $('select[name=class]').val());
+			});
+			$('.submit').click(function(){
+				var ids = []; 
+				$('input[name="ids"]:checked').each(function(){ 
+					ids.push($(this).val()); 
+				});
+				if(ids.length == 0) {
+					showFail('请选择要添加的学生！');
+				} else {
+					infoRequest('', ids, function(){
+						showSuccess('添加成功！');
+					});
+				}
+			});
+			$('#college').change(function(){
+				classInfo($(this).val());
+			});
+		</script>
+		</block>

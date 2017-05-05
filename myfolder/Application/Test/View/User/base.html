@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title><block name="title">{:C('SYS_NAME')}</block></title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta http-equiv="Cache-Control" content="no-siteapp"/>
+	<link rel="stylesheet" href="__PUBLIC__/assets/css/amazeui.min.css"/>
+	<style>
+		.header {
+			text-align: center;
+		}
+		.header h1 {
+			font-size: 200%;
+			font-weight:400;
+			color: #333;
+			margin-top: 30px;
+		}
+		h4{
+			font-weight:400;
+		}
+		.header p {
+			font-size: 14px;
+		}
+		.am-btn-vsm {
+			font-size: 1.2rem;
+		}
+	</style>
+</head>
+<body>
+	<div class="header">
+	<div class="am-g">
+		<h1><block name="h1"></block></h1>
+	</div>
+	<hr />
+	</div>
+	<div class="am-g">
+		<div class="am-u-lg-6 am-u-md-8 am-u-sm-centered">
+			<h4><block name="h4"></block></h4>
+			<hr><block name="btn"></block>
+			<form method="post" class="am-form" action="">
+				<p class="am-text-danger">{$message}</p>
+				<block name="form">
+				</block>
+				<br>
+			</form>
+			<hr>
+			<p class="am-text-center">&copy;{:date('Y')} {:C('SYS_NAME')}</p>
+		</div>
+	</div>
+	<block name="script"></block>
+</body>
+</html>

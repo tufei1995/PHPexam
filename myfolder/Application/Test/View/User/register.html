@@ -1,0 +1,23 @@
+<extend name="base" />
+<block name="title">注册 - {:C('SYS_NAME')}</block>
+<block name="h1">注册</block>
+<block name="h4">注册新的帐户</block>
+<block name="form">
+				<div class="am-form-group am-margin-top">
+					<label for="username" class="am-form-label">学号</label>
+					<input type="text" name="username" id="username" placeholder="请输入学号" class="am-form-field" value="{$Think.post.username}" autocomplete="off">
+				</div>
+				<div class="am-form-group am-margin-top">
+					<label for="password" class="am-form-label">密码</label>
+					<input type="password" name="password" id="password" placeholder="请输入密码" class="am-form-field" value="{$Think.post.password}" autocomplete="off" minlength="6">
+				</div>
+				<div class="am-form-group am-margin-top">
+					<label for="password1" class="am-form-label">确认密码</label>
+					<input type="password" name="password1" id="password1" placeholder="请再次输入密码" class="am-form-field" value="{$Think.post.password1}" autocomplete="off" minlength="6">
+				</div>
+				<div class="am-form-group am-margin-top">
+					<input type="submit" name="login" value="注 册" class="am-btn am-btn-primary am-btn-sm am-fl">
+					<a href="../user/login" style="margin-left:10px;" class="am-btn am-btn-default am-btn-sm am-fr">登 录</a>
+					<a href="../user/resetPassword" style="margin-left:10px;" class="am-btn am-btn-default am-btn-sm am-fr">忘记密码</a>
+				</div>
+</block>

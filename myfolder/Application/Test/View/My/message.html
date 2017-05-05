@@ -1,0 +1,50 @@
+	<extend name="Layout/base" />
+	<block name="title">我的消息</block>
+	<block name="page_title">消息</block>
+	<block name="page_title_en">message</block>
+	<block name="main">
+		<div class="am-g">
+			<div class="am-u-sm-12 am-u-md-4 am-margin-top">
+				<div class="am-btn-toolbar">
+					<div class="am-btn-group am-btn-group-xs">
+						<button type="button" class="am-btn am-btn-default read">设为已读</button>
+						<button type="button" class="am-btn am-btn-default readall">全部已读</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="am-g">
+			<div class="am-u-sm-12">
+				<table class="am-table text-overflow am-table-striped am-table-hover table-main">
+					<thead>
+						<tr><th class="table-check"><input type="checkbox" name="selectall" onclick="selAll();"></th><th>消息内容</th><th style="width:150px;text-align: center;" class="am-hide-sm-only">创建时间</th></tr>
+					</thead>
+					<tbody id="body">
+					</tbody>
+				</table>
+				<ul class="am-pagination am-pagination-centered">
+				</ul>
+				<br><br><br><br>
+			</div>
+		</div>
+		</block>
+		<block name="script">
+		<script>
+			message();
+			$('.read').click(function(){
+				var ids = []; 
+				$('input[name="ids"]:checked').each(function(){ 
+					ids.push($(this).val()); 
+				});
+				if(ids.length == 0) {
+					showFail('请选择要标记为已读的内容！');
+				} else {
+					read(ids);
+				}
+			});
+			$('.readall').click(function(){
+				readAll();
+			});
+		</script>
+		</block>

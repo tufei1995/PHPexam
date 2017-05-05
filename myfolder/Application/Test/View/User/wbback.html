@@ -1,0 +1,21 @@
+<extend name="base" />
+<block name="h1">绑定</block>
+<block name="h4">绑定微博与你的系统帐户</block>
+<block name="form">
+			<div class="am-form-group am-margin-top">
+				<label for="username" class="am-form-label">学号/工号</label>
+				<input type="hidden" name="wid" value="{$data.userid}">
+				<input type="text" name="username" id="username" placeholder="请输入学号/工号" class="am-form-field" value="">
+			</div>
+			<div class="am-form-group am-margin-top">
+				<label for="password" class="am-form-label">密码</label>
+				<input type="password" name="password" id="password" placeholder="请输入密码" class="am-form-field" value="">
+			</div>
+			<div class="am-form-group am-margin-top">
+				<input type="submit" name="login" value="绑 定" class="am-btn am-btn-primary am-btn-sm am-fl">
+				<a href="../user/register" style="margin-left:10px;" class="am-btn am-btn-default am-btn-sm am-fr">注 册</a>
+				<a href="../user/resetPassword" style="margin-left:10px;" class="am-btn am-btn-default am-btn-sm am-fr">忘记密码</a>
+			</div>
+			<br>
+		</form>
+</block>

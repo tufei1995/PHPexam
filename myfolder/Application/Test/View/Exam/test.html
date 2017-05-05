@@ -1,0 +1,25 @@
+<extend name="Layout/base" />
+<block name="title">统一考试 - {:C('SYS_NAME')}</block>
+<block name="page_title">统一考试</block>
+<block name="page_title_en">Exam</block>
+<block name="main">
+		<div class="am-g">
+			<div class="am-u-sm-12">
+				<table class="am-table text-overflow am-table-striped am-table-hover table-main am-table-centered">
+					<thead>
+						<tr><th style="width: 50px">序号</th><th>名称</th><th style="width: 100px">开始日期</th><th style="width: 100px">截止日期</th><th style="width: 250px">状态</th><th>总分</th><th>客观题</th><th>主观题</th><th style="width: 150px">操作</th></tr>
+					</thead>
+					<tbody id="body">
+					<if condition="$data">
+					<volist name="data" id="item">
+					<tr><td>{$key+1}</td><td>{$item.title}</td><td>{$item.start}</td><td>{$item.end}</td><td>{$map[$item['status']]}</td><td><if condition="$item['is_mark']">{$item.zongfen}<else/>尚未阅卷</if></td><td>{$item.keguan}</td><td><if condition="$item['is_mark']">{$item.zhuguan}<else/>尚未阅卷</if></td><td><if condition="$item['status'] eq '1' ||$item['status'] eq '-1'"><a href="?id={$item.tid}">开始考试</a></if></td></tr>
+					</volist>
+					<else/>
+					<tr><td colspan=6><span class='am-icon-warning'></span> 暂无数据</td></tr>
+					</if>
+					</tbody>
+				</table>
+				<br><br><br><br>
+			</div>
+		</div>
+	</block>
